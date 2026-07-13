@@ -1,0 +1,14 @@
+{
+  "name": "upkeep",
+  "displayName": "Upkeep",
+  "version": "0.1.0",
+  "gtApi": "^1.0",
+  "blurb": "The maintenance log that outlives the equipment: systems, serials, service dates, and what's due.",
+  "color": "teal",
+  "tags": ["home", "maintenance", "log", "records"],
+  "repository": "https://github.com/generaltext/upkeep",
+  "icon": {
+    "kind": "svg",
+    "value": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 10.7 11.3 3.6a1 1 0 0 1 1.4 0L21 10.7'/><path d='M5.5 9.3V20h13V9.3'/><path d='m9 14.3 2 2 4-4'/></svg>"
+  }
+}

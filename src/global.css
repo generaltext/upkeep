@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Tailwind v4 preflight defaults every border to currentColor (the bright text
+   color). Default to the subtle border token instead; utilities like
+   border-[color] and inline borderColor still win. */
+*,
+::before,
+::after {
+  border-color: var(--border);
+}
+
+body {
+  margin: 0;
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Calm neutral surfaces, teal accent, auto light/dark. Status hues (overdue /
+   due-soon / ok) drive the dashboard buckets. */
+:root {
+  --bg: #f8faf9;
+  --panel: #ffffff;
+  --fg: #14201d;
+  --muted: #5f716c;
+  --border: #e2e8e5;
+  --hover: #eef3f1;
+  --accent: #0f766e;
+  --accent-soft: #d5f0ea;
+
+  --overdue: #dc2626;
+  --overdue-soft: #fee2e2;
+  --soon: #b45309;
+  --soon-soft: #fef3c7;
+  --ok: #15803d;
+  --ok-soft: #dcfce7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101917;
+    --panel: #182421;
+    --fg: #eef3f1;
+    --muted: #96a8a2;
+    --border: #2a3733;
+    --hover: #22302c;
+    --accent: #2dd4bf;
+    --accent-soft: #0d3833;
+
+    --overdue: #f87171;
+    --overdue-soft: #3f1d1d;
+    --soon: #fbbf24;
+    --soon-soft: #3a2a09;
+    --ok: #4ade80;
+    --ok-soft: #10331f;
+  }
+}
+
+/* ── tag chips ─────────────────────────────────────────────────────────────── */
+.tag {
+  --tc: #5f716c;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--tc);
+  background: color-mix(in srgb, var(--tc) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tc) 25%, transparent);
+  white-space: nowrap;
+}
+@media (prefers-color-scheme: dark) {
+  .tag {
+    color: color-mix(in srgb, var(--tc) 55%, white);
+  }
+}
+.tag-teal {
+  --tc: #0d9488;
+}
+.tag-blue {
+  --tc: #2563eb;
+}
+.tag-green {
+  --tc: #16a34a;
+}
+.tag-violet {
+  --tc: #7c3aed;
+}
+.tag-rose {
+  --tc: #e11d48;
+}
+.tag-amber {
+  --tc: #d97706;
+}
+.tag-orange {
+  --tc: #ea580c;
+}
+.tag-cyan {
+  --tc: #0891b2;
+}
+
+/* dense, table-like row lists. Explicit border token (NOT Tailwind's divide-y,
+   whose v4 default is currentColor → the bright text color) and a tight radius. */
+.rowlist {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--panel);
+}
+.rowlist > * + * {
+  border-top: 1px solid var(--border);
+}
+
+.badge-archived {
+  flex: none;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.4;
+}
+
+/* thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}

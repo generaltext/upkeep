@@ -1,0 +1,37 @@
+{
+  "name": "upkeep",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The maintenance log that outlives the equipment — a General Text app for tracking home/vehicle systems, service history, and what's due.",
+  "license": "MIT",
+  "author": "General Text & Computing Company",
+  "homepage": "https://www.generaltext.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/generaltext/upkeep"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "lucide-react": "^0.469.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^3.0.0"
+  }
+}
