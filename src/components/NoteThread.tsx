@@ -6,6 +6,7 @@ import { attachmentUrl, blobsSupported, isImage, putAttachment } from '../lib/bl
 import { humanBytes } from '../lib/format'
 import { ActorStamp, Button, IconButton } from './common'
 import { Icon } from './Icon'
+import { Markdown } from './Markdown'
 
 export function NoteThread({ targetId }: { targetId: string }) {
   const { state, dispatch } = useStore()
@@ -72,7 +73,10 @@ export function NoteThread({ targetId }: { targetId: string }) {
               </button>
             </span>
           )}
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <span className="hidden text-[11px] sm:inline" style={{ color: 'var(--muted)' }}>
+              Markdown supported
+            </span>
             <Button size="sm" variant="primary" onClick={post} disabled={busy || (!body.trim() && !file)}>
               {busy ? 'Saving…' : 'Add note'}
             </Button>
@@ -104,7 +108,7 @@ function NoteItem({ note, onArchive }: { note: NoteRecord; onArchive: () => void
   return (
     <div className="group rounded-lg border p-3" style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}>
       <div className="flex items-start justify-between gap-2">
-        {note.body ? <p className="whitespace-pre-wrap text-sm">{note.body}</p> : <span />}
+        {note.body ? <Markdown source={note.body} className="min-w-0 flex-1" /> : <span />}
         <div className="opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
           <IconButton icon="Archive" size={13} onClick={onArchive} title="Archive note" />
         </div>

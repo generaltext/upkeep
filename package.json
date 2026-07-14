@@ -1,7 +1,7 @@
 {
   "name": "upkeep",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "The maintenance log that outlives the equipment — a General Text app for tracking home/vehicle systems, service history, and what's due.",
   "license": "MIT",

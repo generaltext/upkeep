@@ -3,6 +3,7 @@ import { KINDS, propertyKindLabel } from '../lib/model'
 import { formatDate, formatMoney } from '../lib/format'
 import type { EntityRecord } from '../lib/reducer'
 import { Icon } from './Icon'
+import { Markdown } from './Markdown'
 
 function displayValue(key: string, type: string, raw: string | number): string {
   if (raw === '' || raw == null) return ''
@@ -45,9 +46,9 @@ export function FieldsView({ entity }: { entity: EntityRecord }) {
         </dl>
       )}
       {notes && (
-        <p className="mt-3 whitespace-pre-wrap border-t pt-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--fg)' }}>
-          {notes}
-        </p>
+        <div className="mt-3 border-t pt-3" style={{ borderColor: 'var(--border)', color: 'var(--fg)' }}>
+          <Markdown source={notes} />
+        </div>
       )}
     </div>
   )
