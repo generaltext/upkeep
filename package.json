@@ -1,7 +1,7 @@
 {
   "name": "upkeep",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "description": "The maintenance log that outlives the equipment — a General Text app for tracking home/vehicle systems, service history, and what's due.",
   "license": "MIT",
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "lucide-react": "^0.469.0",
+    "markdown-to-jsx": "^9.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1"

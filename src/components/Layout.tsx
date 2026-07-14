@@ -57,27 +57,30 @@ export function Layout() {
 
   return (
     <div className="flex h-full flex-col md:flex-row" style={{ background: 'var(--bg)' }}>
-      {/* Mobile top bar */}
+      {/* Mobile top bar. No safe-area padding: the General Text shell owns the device
+          edges (status bar / home indicator), so adding insets here double-counts them. */}
       <header
-        className="flex shrink-0 items-center gap-2 border-b px-3 py-2.5 md:hidden"
-        style={{ borderColor: 'var(--border)', background: 'var(--panel)', paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}
+        className="flex shrink-0 items-center gap-2 border-b px-3 py-2 md:hidden"
+        style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
       >
         <span className="flex h-7 w-7 items-center justify-center rounded-md" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
           {BRAND}
         </span>
         <span className="text-base font-semibold tracking-tight">Upkeep</span>
-        <div className="ml-auto flex items-center gap-1">
-          <Icon name={connected ? 'Wifi' : 'WifiOff'} size={15} style={{ color: 'var(--muted)' }} />
-          <button
-            type="button"
-            onClick={() => setCmdOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-md"
-            style={{ color: 'var(--fg)' }}
-            aria-label="Search or create"
-          >
-            <Icon name="Search" size={18} />
-          </button>
-        </div>
+        {!connected && (
+          <span className="rounded-full px-2 py-0.5 text-[11px] font-medium" style={{ background: 'var(--soon-soft)', color: 'var(--soon)' }}>
+            Offline
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => setCmdOpen(true)}
+          className="ml-auto flex h-9 w-9 items-center justify-center rounded-md"
+          style={{ color: 'var(--fg)' }}
+          aria-label="Search or create"
+        >
+          <Icon name="Search" size={18} />
+        </button>
       </header>
 
       {/* Desktop sidebar */}
@@ -139,7 +142,7 @@ export function Layout() {
       {/* Mobile bottom tab bar */}
       <nav
         className="flex shrink-0 border-t md:hidden"
-        style={{ borderColor: 'var(--border)', background: 'var(--panel)', paddingBottom: 'env(safe-area-inset-bottom)' }}
+        style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
       >
         {BOTTOM_PRIMARY.map((item) => (
           <NavLink
@@ -179,7 +182,7 @@ function MoreSheet({ onClose, onSearch, me, connected }: { onClose: () => void; 
     <div className="fixed inset-0 z-50 flex flex-col justify-end md:hidden" style={{ background: 'rgba(0,0,0,0.4)' }} onClick={onClose}>
       <div
         className="rounded-t-2xl border-t p-2"
-        style={{ background: 'var(--panel)', borderColor: 'var(--border)', paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+        style={{ background: 'var(--panel)', borderColor: 'var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mx-auto mb-2 mt-1 h-1 w-10 rounded-full" style={{ background: 'var(--border)' }} />

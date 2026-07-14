@@ -149,25 +149,30 @@ export function PageHeader({
   back?: ReactNode
 }) {
   return (
-    <div className="mb-5 flex items-start gap-3">
-      {back}
-      {icon && (
-        <span
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-          style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
-        >
-          <Icon name={icon} size={18} />
-        </span>
-      )}
-      <div className="min-w-0 flex-1">
-        <h1 className="truncate text-xl font-semibold tracking-tight">{title}</h1>
-        {subtitle && (
-          <div className="mt-0.5 text-sm" style={{ color: 'var(--muted)' }}>
-            {subtitle}
-          </div>
+    <div className="mb-5">
+      <div className="flex items-start gap-3">
+        {back}
+        {icon && (
+          <span
+            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+            style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+          >
+            <Icon name={icon} size={18} />
+          </span>
         )}
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl font-semibold tracking-tight line-clamp-2">{title}</h1>
+          {subtitle && (
+            <div className="mt-0.5 text-sm" style={{ color: 'var(--muted)' }}>
+              {subtitle}
+            </div>
+          )}
+        </div>
+        {/* Desktop: actions inline. Mobile: they move to their own row below so the
+            title and subtitle get the full width (no more "UV…" truncation). */}
+        {actions && <div className="hidden shrink-0 items-center gap-2 sm:flex">{actions}</div>}
       </div>
-      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+      {actions && <div className="mt-3 flex flex-wrap items-center gap-2 sm:hidden">{actions}</div>}
     </div>
   )
 }
@@ -226,9 +231,7 @@ export function Modal({ title, onClose, children, wide }: { title: ReactNode; on
           <h2 className="text-sm font-semibold">{title}</h2>
           <IconButton icon="X" onClick={onClose} title="Close" />
         </div>
-        <div className="overflow-y-auto p-4 sm:p-5" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-          {children}
-        </div>
+        <div className="overflow-y-auto p-4 sm:p-5">{children}</div>
       </div>
     </div>
   )

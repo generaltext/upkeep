@@ -144,6 +144,109 @@ body {
   line-height: 1.4;
 }
 
+/* ── rendered markdown (notes) ─────────────────────────────────────────────────
+   markdown-to-jsx emits plain tags; Tailwind's preflight resets list markers and
+   heading sizes, so restore a compact typographic scale scoped to `.md`. */
+.md {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+.md > * + * {
+  margin-top: 0.5rem;
+}
+/* Preserve authored line breaks inside a paragraph (friendlier for a notes field
+   than CommonMark's soft-break-as-space), while markdown structure still applies. */
+.md p {
+  white-space: pre-wrap;
+}
+.md h1,
+.md h2,
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.md h1 {
+  font-size: 1rem;
+}
+.md ul,
+.md ol {
+  padding-left: 1.35rem;
+}
+.md ul {
+  list-style: disc;
+}
+.md ol {
+  list-style: decimal;
+}
+.md li {
+  margin: 0.15rem 0;
+}
+.md li > ul,
+.md li > ol {
+  margin-top: 0.15rem;
+}
+.md li::marker {
+  color: var(--muted);
+}
+.md a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.md code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  background: var(--hover);
+  border-radius: 4px;
+  padding: 0.05em 0.35em;
+}
+.md pre {
+  background: var(--hover);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+}
+.md pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+.md blockquote {
+  border-left: 2px solid var(--border);
+  padding-left: 0.75rem;
+  color: var(--muted);
+  margin-left: 0;
+}
+.md hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+.md table {
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+.md th,
+.md td {
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  text-align: left;
+}
+.md input[type='checkbox'] {
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+/* GFM task-list items: drop the bullet so the checkbox reads as the marker. */
+.md li:has(> input[type='checkbox']:first-child) {
+  list-style: none;
+  margin-left: -1.35rem;
+}
+
 /* thin scrollbars */
 * {
   scrollbar-width: thin;
