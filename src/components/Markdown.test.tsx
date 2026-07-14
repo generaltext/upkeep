@@ -5,6 +5,12 @@ import { Markdown } from './Markdown'
 const html = (src: string) => renderToStaticMarkup(<Markdown source={src} />)
 
 describe('Markdown (markdown-to-jsx)', () => {
+  it('wraps output in a .md container so scoped styles apply', () => {
+    // Regression: markdown-to-jsx does not forward className with forceBlock, so we
+    // wrap it ourselves — otherwise .md list/heading/code styles never match.
+    expect(html('- one')).toContain('class="md')
+  })
+
   it('renders inline emphasis and code', () => {
     const out = html('A **bold** and *italic* and `code` word.')
     expect(out).toContain('<strong>bold</strong>')
