@@ -58,7 +58,7 @@ export function MissingRuntime({ onTryDemo }: { onTryDemo: () => void }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <a href="https://www.generaltext.org" className="inline-flex items-center gap-1.5 rounded-md px-3.5 py-2 text-sm font-medium" style={{ background: 'var(--accent)', color: '#fff' }}>
+          <a href="https://www.generaltext.org" className="inline-flex items-center gap-1.5 rounded-md px-3.5 py-2 text-sm font-medium" style={{ background: 'var(--accent)', color: 'var(--accent-fg)' }}>
             Open General Text <Icon name="ExternalLink" size={14} />
           </a>
           <button

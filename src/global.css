@@ -28,17 +28,24 @@ body {
   color: var(--fg);
 }
 
-/* Calm neutral surfaces, teal accent, auto light/dark. Status hues (overdue /
-   due-soon / ok) drive the dashboard buckets. */
+/* Theme: follow the SHELL, not the OS. General Text applies its theme to our frame by
+   toggling a `.dark` class on <html> and injecting design tokens (--gt-*) on :root, and
+   re-applies both whenever the user switches theme. So our neutral chrome reads from the
+   --gt-* tokens (installed / gallery demo), with our own teal palette as the fallback for
+   when there's no shell (pnpm dev, self-hosted demo). We deliberately do NOT key off
+   `prefers-color-scheme` — that's the OS setting, which can disagree with the shell.
+   Semantic status hues (overdue / due-soon / ok) are ours; the shell has no tokens for
+   them, but they still flip with the shell's `.dark` class below. */
 :root {
-  --bg: #f8faf9;
-  --panel: #ffffff;
-  --fg: #14201d;
-  --muted: #5f716c;
-  --border: #e2e8e5;
-  --hover: #eef3f1;
-  --accent: #0f766e;
-  --accent-soft: #d5f0ea;
+  --bg: var(--gt-bg, #f8faf9);
+  --panel: var(--gt-bg-elev, #ffffff);
+  --fg: var(--gt-fg, #14201d);
+  --muted: var(--gt-fg-3, #5f716c);
+  --border: var(--gt-border, #e2e8e5);
+  --hover: var(--gt-bg-sub, #eef3f1);
+  --accent: var(--gt-accent, #0f766e);
+  --accent-soft: var(--gt-accent-soft, #d5f0ea);
+  --accent-fg: var(--gt-accent-fg, #ffffff);
 
   --overdue: #dc2626;
   --overdue-soft: #fee2e2;
@@ -47,24 +54,26 @@ body {
   --ok: #15803d;
   --ok-soft: #dcfce7;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #101917;
-    --panel: #182421;
-    --fg: #eef3f1;
-    --muted: #96a8a2;
-    --border: #2a3733;
-    --hover: #22302c;
-    --accent: #2dd4bf;
-    --accent-soft: #0d3833;
+/* The shell toggles `.dark` on <html>. When the shell is present its --gt-* tokens have
+   already flipped (picked up by the var() refs above); these dark values are the fallback
+   for a shell-less dark session and for our own status hues. */
+:root.dark {
+  --bg: var(--gt-bg, #101917);
+  --panel: var(--gt-bg-elev, #182421);
+  --fg: var(--gt-fg, #eef3f1);
+  --muted: var(--gt-fg-3, #96a8a2);
+  --border: var(--gt-border, #2a3733);
+  --hover: var(--gt-bg-sub, #22302c);
+  --accent: var(--gt-accent, #2dd4bf);
+  --accent-soft: var(--gt-accent-soft, #0d3833);
+  --accent-fg: var(--gt-accent-fg, #06231f);
 
-    --overdue: #f87171;
-    --overdue-soft: #3f1d1d;
-    --soon: #fbbf24;
-    --soon-soft: #3a2a09;
-    --ok: #4ade80;
-    --ok-soft: #10331f;
-  }
+  --overdue: #f87171;
+  --overdue-soft: #3f1d1d;
+  --soon: #fbbf24;
+  --soon-soft: #3a2a09;
+  --ok: #4ade80;
+  --ok-soft: #10331f;
 }
 
 /* ── tag chips ─────────────────────────────────────────────────────────────── */
@@ -82,10 +91,8 @@ body {
   border: 1px solid color-mix(in srgb, var(--tc) 25%, transparent);
   white-space: nowrap;
 }
-@media (prefers-color-scheme: dark) {
-  .tag {
-    color: color-mix(in srgb, var(--tc) 55%, white);
-  }
+:root.dark .tag {
+  color: color-mix(in srgb, var(--tc) 55%, white);
 }
 .tag-teal {
   --tc: #0d9488;

@@ -96,7 +96,7 @@ export function Button({
   const cls: Record<string, string> = { default: 'border', primary: '', ghost: '', danger: 'border' }
   const inline: CSSProperties =
     variant === 'primary'
-      ? { background: 'var(--accent)', color: '#fff' }
+      ? { background: 'var(--accent)', color: 'var(--accent-fg)' }
       : variant === 'default'
         ? { borderColor: 'var(--border)', background: 'var(--panel)' }
         : variant === 'danger'
