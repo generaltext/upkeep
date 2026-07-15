@@ -37,7 +37,7 @@ const BRAND = (
 )
 
 export function Layout() {
-  const { connected, me, state, config, version } = useStore()
+  const { connected, state, config, version } = useStore()
   const [cmdOpen, setCmdOpen] = useState(false)
   const [moreOpen, setMoreOpen] = useState(false)
 
@@ -129,9 +129,11 @@ export function Layout() {
         </nav>
 
         <div className="flex items-center gap-2 border-t px-4 py-3 text-xs" style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}>
-          <Icon name={connected ? 'Wifi' : 'WifiOff'} size={13} />
-          <span>{connected ? 'Synced' : 'Offline'}</span>
-          {me && <span className="ml-auto truncate">{me.name}</span>}
+          <span
+            title={connected ? 'Synced' : 'Offline'}
+            className="inline-block h-2 w-2 shrink-0 rounded-full"
+            style={{ background: connected ? '#16a34a' : 'var(--muted)' }}
+          />
         </div>
       </aside>
 
@@ -170,14 +172,14 @@ export function Layout() {
         </button>
       </nav>
 
-      {moreOpen && <MoreSheet onClose={() => setMoreOpen(false)} onSearch={() => { setMoreOpen(false); setCmdOpen(true) }} me={me?.name} connected={connected} />}
+      {moreOpen && <MoreSheet onClose={() => setMoreOpen(false)} onSearch={() => { setMoreOpen(false); setCmdOpen(true) }} connected={connected} />}
       <CommandBar open={cmdOpen} onClose={() => setCmdOpen(false)} />
       {import.meta.env.DEV && <DevTools />}
     </div>
   )
 }
 
-function MoreSheet({ onClose, onSearch, me, connected }: { onClose: () => void; onSearch: () => void; me: string | undefined; connected: boolean }) {
+function MoreSheet({ onClose, onSearch, connected }: { onClose: () => void; onSearch: () => void; connected: boolean }) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end md:hidden" style={{ background: 'rgba(0,0,0,0.4)' }} onClick={onClose}>
       <div
@@ -202,9 +204,11 @@ function MoreSheet({ onClose, onSearch, me, connected }: { onClose: () => void; 
           </NavLink>
         ))}
         <div className="flex items-center gap-2 px-3 pb-1 pt-2 text-xs" style={{ color: 'var(--muted)' }}>
-          <Icon name={connected ? 'Wifi' : 'WifiOff'} size={13} />
+          <span
+            className="inline-block h-2 w-2 shrink-0 rounded-full"
+            style={{ background: connected ? '#16a34a' : 'var(--muted)' }}
+          />
           <span>{connected ? 'Synced' : 'Offline'}</span>
-          {me && <span className="ml-auto truncate">{me}</span>}
         </div>
       </div>
     </div>

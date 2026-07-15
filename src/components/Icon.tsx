@@ -35,8 +35,6 @@ import {
   Tag,
   Trash2,
   Undo2,
-  Wifi,
-  WifiOff,
   Wrench,
   X,
   type LucideProps,
@@ -79,8 +77,6 @@ const REGISTRY = {
   Tag,
   Trash2,
   Undo2,
-  Wifi,
-  WifiOff,
   Wrench,
   X,
 }
