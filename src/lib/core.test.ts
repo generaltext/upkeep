@@ -10,7 +10,7 @@ import {
   servicesForAsset,
   servicesForSchedule,
 } from './reducer'
-import { appendLine, foldTail } from './log'
+import { appendLine, foldFrom } from './log'
 import { addInterval, daysBetween, dueLabel, intervalLabel, isDateStr, todayStr } from './dates'
 import { computeDue, dueForState, bucketize } from './recurrence'
 import { DEFAULT_CONFIG } from './model'
@@ -195,21 +195,66 @@ describe('recurrence', () => {
 })
 
 describe('log fold', () => {
-  it('folds incrementally and skips a half-synced trailing line', () => {
+  const line = (e: UpkeepEvent) => serializeEvent(e) + '\n'
+
+  it('folds only the appended tail when content is a pure extension', () => {
     const s = emptyState()
-    const e1 = serializeEvent(ev({ id: 'e1', type: 'asset.create', subject: 'ast_1', data: { name: 'Furnace' } }))
-    const e2 = serializeEvent(ev({ id: 'e2', type: 'asset.create', subject: 'ast_2', data: { name: 'Heater' } }))
+    const a = ev({ id: 'e1', type: 'asset.create', subject: 'ast_1', data: { name: 'Furnace' } })
+    const b = ev({ id: 'e2', type: 'asset.create', subject: 'ast_2', data: { name: 'Heater' } })
 
-    const partial = appendLine('', e1) + e2 // e1\n + e2 (no trailing newline)
-    const len1 = foldTail(s, partial, 0)
+    const first = line(a)
+    const consumed = foldFrom(s, first, 0)
+    expect(consumed).toBe(first.length)
     expect(Object.keys(s.entities)).toEqual(['ast_1'])
-    expect(len1).toBe(appendLine('', e1).length)
 
-    const full = appendLine(appendLine('', e1), e2)
-    const len2 = foldTail(s, full, len1)
+    // append b; caller resumes from the remembered prefix length
+    const full = first + line(b)
+    const consumed2 = foldFrom(s, full, consumed)
+    expect(consumed2).toBe(full.length)
     expect(Object.keys(s.entities).sort()).toEqual(['ast_1', 'ast_2'])
-    expect(len2).toBe(full.length)
     expect(s.events).toHaveLength(2)
+  })
+
+  it('leaves a half-synced trailing line for the next fold', () => {
+    const s = emptyState()
+    const a = ev({ id: 'e1', type: 'asset.create', subject: 'ast_1', data: { name: 'Furnace' } })
+    const b = ev({ id: 'e2', type: 'asset.create', subject: 'ast_2', data: { name: 'Heater' } })
+
+    const partial = line(a) + serializeEvent(b) // no trailing newline yet
+    const consumed = foldFrom(s, partial, 0)
+    expect(consumed).toBe(line(a).length) // only the complete line
+    expect(Object.keys(s.entities)).toEqual(['ast_1'])
+    // the newline arrives → b now folds
+    foldFrom(s, partial + '\n', consumed)
+    expect(Object.keys(s.entities).sort()).toEqual(['ast_1', 'ast_2'])
+  })
+
+  it('a full refold picks up events a CRDT merge inserted before the old offset', () => {
+    // Regression: a concurrent writer's events can land *before* a previously
+    // recorded char offset. A naive tail-slice from that offset skips them; the
+    // store guards this by only trusting the offset when the content still
+    // starts with the exact prefix it folded, else refolding from 0.
+    const local = ev({ id: 'e_local', type: 'asset.create', subject: 'ast_local', data: { name: 'Furnace' } })
+    const remote = ev({ id: 'e_remote', type: 'asset.create', subject: 'ast_remote', data: { name: 'Heater' } })
+    const s = emptyState()
+
+    // we fold our own line and remember the prefix + offset
+    const mine = line(local)
+    const offset = foldFrom(s, mine, 0)
+    expect(Object.keys(s.entities)).toEqual(['ast_local'])
+
+    // merge reorders: the remote event is now ordered *before* ours
+    const merged = line(remote) + line(local)
+    // the store's guard: mine is no longer a prefix of merged → refold from 0
+    expect(merged.startsWith(mine)).toBe(false)
+    foldFrom(s, merged, 0)
+    expect(Object.keys(s.entities).sort()).toEqual(['ast_local', 'ast_remote'])
+
+    // and a naive tail-slice from the stale offset would indeed have missed it
+    const naive = emptyState()
+    applyEvent(naive, local)
+    foldFrom(naive, merged, offset)
+    expect(naive.entities.ast_remote).toBeUndefined()
   })
 
   it('appendLine keeps the log newline-terminated', () => {
