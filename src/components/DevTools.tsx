@@ -15,6 +15,9 @@ export function DevTools() {
   const { state, dispatch, version } = useStore()
   void version
   const [busy, setBusy] = useState(false)
+  // Inline two-step confirm — apps run in a sandboxed iframe without `allow-modals`,
+  // so `window.confirm` is inert (returns false, no dialog). Confirm in-app instead.
+  const [confirming, setConfirming] = useState(false)
   const [pos, setPos] = useState<{ right: number; bottom: number }>({ right: 12, bottom: 12 })
 
   useEffect(() => {
@@ -50,8 +53,8 @@ export function DevTools() {
 
   const hasData = state.events.length > 0
 
-  async function fill() {
-    if (hasData && !window.confirm('This workspace already has data. Add the demo data on top anyway?')) return
+  async function seed() {
+    setConfirming(false)
     setBusy(true)
     try {
       await seedDemo((drafts) => dispatch(drafts))
@@ -60,10 +63,48 @@ export function DevTools() {
     }
   }
 
+  function onClick() {
+    // Appending onto an existing log needs a confirm; an empty workspace seeds directly.
+    if (hasData && !confirming) {
+      setConfirming(true)
+      return
+    }
+    void seed()
+  }
+
+  if (confirming) {
+    return (
+      <div
+        className="fixed z-[60] flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium shadow-md"
+        style={{ right: pos.right, bottom: pos.bottom, background: 'var(--panel)', borderColor: 'var(--border)', color: 'var(--fg)' }}
+      >
+        <span className="pl-1.5" style={{ color: 'var(--muted)' }}>
+          Add demo on top of existing data?
+        </span>
+        <button
+          type="button"
+          onClick={() => setConfirming(false)}
+          className="rounded-full px-2 py-1"
+          style={{ color: 'var(--muted)' }}
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onClick}
+          className="rounded-full px-2.5 py-1 font-semibold"
+          style={{ background: 'var(--accent)', color: 'var(--panel)' }}
+        >
+          Add
+        </button>
+      </div>
+    )
+  }
+
   return (
     <button
       type="button"
-      onClick={fill}
+      onClick={onClick}
       disabled={busy}
       title={hasData ? 'Append the sample home log to this workspace' : 'Fill this empty dev workspace with the sample home log'}
       className="fixed z-[60] inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-md disabled:opacity-60"

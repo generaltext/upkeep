@@ -1,7 +1,7 @@
 {
   "name": "upkeep",
   "displayName": "Upkeep",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "gtApi": "^1.0",
   "blurb": "The maintenance log that outlives the equipment: systems, serials, service dates, and what's due.",
   "color": "teal",
